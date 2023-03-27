@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -46,7 +47,13 @@ public class OnlineCoursesAnalyzer {
 
     //1
     public Map<String, Integer> getPtcpCountByInst() {
-        return null;
+        Map<String, Integer> ptcpCountByInst = new TreeMap<>();
+        for (Course course : courses) {
+            String inst = course.getInstitution();
+            int ptcp = course.getParticipants();
+            ptcpCountByInst.put(inst, ptcpCountByInst.getOrDefault(inst, 0) + ptcp);
+        }
+        return ptcpCountByInst;
     }
 
     //2
@@ -140,4 +147,12 @@ class Course {
         this.percentFemale = percentFemale;
         this.percentDegree = percentDegree;
     }
+
+    public String getInstitution() {
+        return institution;
+    }
+
+    public int getParticipants() {
+
+        return participants;}
 }
