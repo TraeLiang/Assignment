@@ -137,14 +137,65 @@ public class OnlineCoursesAnalyzer {
 
     //5
     public List<String> searchCourses(String courseSubject, double percentAudited, double totalCourseHours) {
-
-        return null;
+        List<String> result = new ArrayList<>();
+        for (Course course : courses) {
+            if (course.getCourseSubject().toLowerCase().contains(courseSubject.toLowerCase())
+                    && course.percentAudited >= percentAudited
+                    && course.totalHours <= totalCourseHours) {
+                result.add(course.getCourseTitle());
+            }
+        }
+        Collections.sort(result);
+        return result.stream().distinct().collect(Collectors.toList());
     }
 
     //6
     public List<String> recommendCourses(int age, int gender, int isBachelorOrHigher) {
-        return null;
+        // Calculate average values for each course
+        Map<String, Double[]> courseAverages = new HashMap<>();
+        for (Course course : courses) {
+            String courseNumber = course.number;
+            Double[] averages = courseAverages.getOrDefault(courseNumber, new Double[]{0.0, 0.0, 0.0});
+            averages[0] += course.medianAge;
+            averages[1] += course.medianAge;
+            averages[2] += course.percentDegree;
+            courseAverages.put(courseNumber, averages);
+        }
+        for (Map.Entry<String, Double[]> entry : courseAverages.entrySet()) {
+            Double[] averages = entry.getValue();
+            averages[0] /= courses.size();
+            averages[1] /= courses.size();
+            averages[2] /= courses.size();
+        }
+
+        // Calculate similarity values for each course
+        Map<String, Double> similarityValues = new HashMap<>();
+        for (Map.Entry<String, Double[]> entry : courseAverages.entrySet()) {
+            String courseNumber = entry.getKey();
+            Double[] averages = entry.getValue();
+            double similarityValue = Math.pow(age - averages[0], 2) + Math.pow(gender * 100 - averages[1], 2) + Math.pow(isBachelorOrHigher * 100 - averages[2], 2);
+            similarityValues.put(courseNumber, similarityValue);
+        }
+
+        // Sort courses by similarity value and title
+        List<Course> sortedCourses = new ArrayList<>(courses);
+        sortedCourses.sort((c1, c2) -> {
+            int result = similarityValues.get(c1.number).compareTo(similarityValues.get(c2.number));
+            if (result == 0) {
+                result = c1.getCourseTitle().compareTo(c2.getCourseTitle());
+            }
+            return result;
+        });
+
+        // Return top 10 courses
+        List<String> recommendedCourses = new ArrayList<>();
+        for (int i = 0; i < 10 && i < sortedCourses.size(); i++) {
+            recommendedCourses.add(sortedCourses.get(i).getCourseTitle());
+        }
+        return recommendedCourses;
     }
+
+
 
 }
 
@@ -217,10 +268,6 @@ class Course {
         return participants;
     }
 
-    public int getYear() {
-        return year;
-    }
-
     public String getInstitution() {
         return institution;
     }
@@ -239,5 +286,16 @@ class Course {
 
     public String getCourseTitle() {
         return title;
+    }
+    public double getAverageMale(String number) {
+        return percentMale;
+    }
+
+    public double getAverageMedianAge(String number) {
+        return medianAge;
+    }
+
+    public double getAverageBachelorOrHigher(String number) {
+        return percentDegree;
     }
 }
