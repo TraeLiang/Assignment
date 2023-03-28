@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
  * This is just a demo for you, please run it on JDK17 (some statements may be not allowed in lower version).
  * This is just a demo, and you can extend and implement functions
  * based on this demo, or implement it in a different way.
@@ -47,18 +46,17 @@ public class OnlineCoursesAnalyzer {
 
     //1
     public Map<String, Integer> getPtcpCountByInst() {
-        return courses.stream()
-                .collect(Collectors.groupingBy(Course::getInstitution,
-                        Collectors.summingInt(Course::getParticipants)));
+        return courses.stream().collect(Collectors.groupingBy(Course::getInstitution,
+                Collectors.summingInt(Course::getParticipants)));
     }
 
     //2
     public Map<String, Integer> getPtcpCountByInstAndSubject() {
         Map<String, Integer> map = new TreeMap<>();
         for (int i = 0; i < courses.size(); i++) {
-            String institution = courses.get(i).getInstitution();
-            String subject = courses.get(i).getCourseSubject();
-            int participants = courses.get(i).getParticipants();
+            String institution = courses.get(i).institution;
+            String subject = courses.get(i).subject;
+            int participants = courses.get(i).participants;
             String key = institution + "-" + subject;
             if (map.containsKey(key)) {
                 map.put(key, map.get(key) + participants);
@@ -67,22 +65,73 @@ public class OnlineCoursesAnalyzer {
             }
         }
         Map<String, Integer> sortedMap = new LinkedHashMap<>();
-        map.entrySet().stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed()
-                        .thenComparing(Map.Entry.comparingByKey()))
-                .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
+        map.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue().reversed().thenComparing(Map.Entry.comparingByKey())).forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
         return sortedMap;
     }
 
     //3
     public Map<String, List<List<String>>> getCourseListOfInstructor() {
-        return null;
+        Map<String, List<List<String>>> result = new HashMap<>();
+        for (Course course : courses) {
+            String[] instructors = course.getInstructors().split(", ");
+            for (String instructor : instructors) {
+                if (!result.containsKey(instructor)) {
+                    result.put(instructor, new ArrayList<>(Arrays.asList(new ArrayList<>(), new ArrayList<>())));
+                }
+                if (instructors.length == 1) {
+                    result.get(instructor).get(0).add(course.getCourseTitle());
+                } else {
+                    result.get(instructor).get(1).add(course.getCourseTitle());
+                }
+            }
+        }
+        for (List<List<String>> lists : result.values()) {
+            for (List<String> list : lists) {
+                List<String> l1 = new ArrayList<>();
+                Set<String> s = new HashSet<>();
+                for (String ss : list)
+                    if (s.add(ss)) l1.add(ss);
+                list.clear();
+                list.addAll(l1);
+                Collections.sort(list);
+            }
+        }
+        return result;
     }
 
     //4
     public List<String> getCourses(int topK, String by) {
+        List<Course> sortedCourses = new ArrayList<>(courses);
+        if (by.equals("hours")) {
+            sortedCourses.sort((a, b) -> {
+                if (b.totalHours == a.totalHours) {
+                    return a.title.compareTo(b.title);
+                } else {
+                    if (b.totalHours > a.totalHours) {
+                        return 1;
+                    } else return -1;
+                }
+            });
+        } else if (by.equals("participants")) {
+            sortedCourses.sort((a, b) -> {
+                if (b.getParticipants() == (a.getParticipants())) {
+                    return a.title.compareTo(b.title);
+                } else {
+                    if (b.participants > a.participants) {
+                        return 1;
+                    } else {return -1;}
+                }
+            });
+        }
 
-        return null;
+        List<String> result = new ArrayList<>();
+        for (Course sortedCours : sortedCourses) {
+            String courseTitle = sortedCours.title;
+            if (!result.contains(courseTitle)) {
+                result.add(courseTitle);
+            }
+        }
+        return result.subList(0,topK);
 
     }
 
@@ -163,32 +212,32 @@ class Course {
         this.percentFemale = percentFemale;
         this.percentDegree = percentDegree;
     }
-    public int getParticipants(){
+
+    public int getParticipants() {
         return participants;
     }
-    public  int getYear(){
+
+    public int getYear() {
         return year;
     }
+
     public String getInstitution() {
         return institution;
     }
+
     public String getSubject() {
         return subject;
     }
-
-
 
     public String getCourseSubject() {
         return subject;
     }
 
-
-
-    public String[] getInstructors() {
-        return new String[0];
+    public String getInstructors() {
+        return instructors;
     }
 
-    public String getTitle() {
-        return  title;
+    public String getCourseTitle() {
+        return title;
     }
 }
