@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6c9acb3b-5b21-4f9f-9531-f2daa1324ecc" name="变更" comment="first time">
+    <list default="true" id="6c9acb3b-5b21-4f9f-9531-f2daa1324ecc" name="变更" comment="second time 10points">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OnlineCoursesAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OnlineCoursesAnalyzer.java" afterDir="false" />
     </list>
@@ -36,7 +36,8 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/Java2_practice/src/OnlineCoursesAnalyzer.java",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "D:/Java2_practice",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   },
   "keyToStringList": {
@@ -62,7 +63,21 @@
       <option name="project" value="LOCAL" />
       <updated>1679926891007</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="second time 10points">
+      <created>1679929529294</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1679929529294</updated>
+    </task>
+    <task id="LOCAL-00003" summary="second time 10points">
+      <created>1679929616420</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1679929616420</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -78,6 +93,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first time" />
-    <option name="LAST_COMMIT_MESSAGE" value="first time" />
+    <MESSAGE value="second time 10points" />
+    <option name="LAST_COMMIT_MESSAGE" value="second time 10points" />
   </component>
 </project>

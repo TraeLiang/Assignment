@@ -47,18 +47,31 @@ public class OnlineCoursesAnalyzer {
 
     //1
     public Map<String, Integer> getPtcpCountByInst() {
-        Map<String, Integer> ptcpCountByInst = new TreeMap<>();
-        for (Course course : courses) {
-            String inst = course.getInstitution();
-            int ptcp = course.getParticipants();
-            ptcpCountByInst.put(inst, ptcpCountByInst.getOrDefault(inst, 0) + ptcp);
-        }
-        return ptcpCountByInst;
+        return courses.stream()
+                .collect(Collectors.groupingBy(Course::getInstitution,
+                        Collectors.summingInt(Course::getParticipants)));
     }
 
     //2
     public Map<String, Integer> getPtcpCountByInstAndSubject() {
-        return null;
+        Map<String, Integer> map = new TreeMap<>();
+        for (int i = 0; i < courses.size(); i++) {
+            String institution = courses.get(i).getInstitution();
+            String subject = courses.get(i).getCourseSubject();
+            int participants = courses.get(i).getParticipants();
+            String key = institution + "-" + subject;
+            if (map.containsKey(key)) {
+                map.put(key, map.get(key) + participants);
+            } else {
+                map.put(key, participants);
+            }
+        }
+        Map<String, Integer> sortedMap = new LinkedHashMap<>();
+        map.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed()
+                        .thenComparing(Map.Entry.comparingByKey()))
+                .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
+        return sortedMap;
     }
 
     //3
@@ -68,11 +81,14 @@ public class OnlineCoursesAnalyzer {
 
     //4
     public List<String> getCourses(int topK, String by) {
+
         return null;
+
     }
 
     //5
     public List<String> searchCourses(String courseSubject, double percentAudited, double totalCourseHours) {
+
         return null;
     }
 
@@ -147,12 +163,32 @@ class Course {
         this.percentFemale = percentFemale;
         this.percentDegree = percentDegree;
     }
-
+    public int getParticipants(){
+        return participants;
+    }
+    public  int getYear(){
+        return year;
+    }
     public String getInstitution() {
         return institution;
     }
+    public String getSubject() {
+        return subject;
+    }
 
-    public int getParticipants() {
 
-        return participants;}
+
+    public String getCourseSubject() {
+        return subject;
+    }
+
+
+
+    public String[] getInstructors() {
+        return new String[0];
+    }
+
+    public String getTitle() {
+        return  title;
+    }
 }
